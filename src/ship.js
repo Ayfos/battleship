@@ -5,9 +5,13 @@ class Ship {
     }
 
     hit() {
-        this.hits += 1;
+        this.hits += 1;  // Tocado, marcador que incrementa 1 a 1
+    }
+
+    isSunk() {
+        return this.hits >= this.length;
     }
 
 }
 
-export default Ship;
+export default Ship; 
