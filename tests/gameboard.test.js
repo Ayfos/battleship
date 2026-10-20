@@ -47,4 +47,19 @@ describe('Gameboard', () => {
         board.receiveAttack([0, 1]);
         expect(board.allSunk()).toBe(true);
     });
+
+    test('devuelve false si algún barco sigue a flote', () => {
+        const board = new Gameboard();
+        const ship1 = new Ship(2);
+        const ship2 = new Ship(2);
+        board.placeShip(ship1, [0, 0], 'horizontal');
+        board.placeShip(ship2, [5, 5], 'horizontal');
+
+        // Hundimos solo ship1
+        board.receiveAttack([0, 0]);
+        board.receiveAttack([0, 1]);
+
+        // ship2 sigue a flote → allSunk() debe ser false
+        expect(board.allSunk()).toBe(false);
+    });
 });
