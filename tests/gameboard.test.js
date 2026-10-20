@@ -31,4 +31,20 @@ describe('Gameboard', () => {
         board.receiveAttack([0, 0]);
         expect(board.missedAttacks).toContainEqual([0, 0]);
     });
+    test('atacar un barco le suma un impacto', () => {
+        const board = new Gameboard();
+        const ship = new Ship(3);
+        board.placeShip(ship, [0, 0], 'horizontal');
+        board.receiveAttack([0, 0]);
+        expect(ship.hits).toBe(1);
+    });
+
+    test('devuelve true cuando todos los barcos están hundidos', () => {
+        const board = new Gameboard();
+        const ship = new Ship(2);
+        board.placeShip(ship, [0, 0], 'horizontal');
+        board.receiveAttack([0, 0]);
+        board.receiveAttack([0, 1]);
+        expect(board.allSunk()).toBe(true);
+    });
 });
