@@ -1,6 +1,7 @@
 class Gameboard {
     constructor() {
         this.grid = [];  //aquí van las filas
+        this.missedAttacks = [];
         for(let i = 0; i < 10; i++) {            // 10 filas 
             const row = [];                  // creamos una fila vacía
             for(let j = 0; j < 10; j++) {         // 10 columnas en cada fila
@@ -27,6 +28,16 @@ class Gameboard {
         }
 
 
+    }
+
+    receiveAttack([x, y]) {
+        const target = this.grid[x][y];
+
+        if(target === null) {
+            this.missedAttacks.push([x, y]);
+        }else {
+            target.hit();
+        }
     }
 }
 

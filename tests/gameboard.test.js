@@ -26,4 +26,9 @@ describe('Gameboard', () => {
         expect(board.grid[1][0]).toBe(ship);
         expect(board.grid[2][0]).toBe(ship);
     });
+    test('registra un ataque fallido en el agua', () => {
+        const board = new Gameboard();
+        board.receiveAttack([0, 0]);
+        expect(board.missedAttacks).toContainEqual([0, 0]);
+    });
 });
