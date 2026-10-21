@@ -16,6 +16,10 @@ class Game {
         opponent.gameboard.receiveAttack(coords);
         this.currentPlayer = opponent;
     }
+
+    isOver() {
+        return this.currentPlayer.gameboard.allSunk();
+    }
 }
 
 export default Game;
