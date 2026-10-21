@@ -36,6 +36,10 @@ class Gameboard {
             if (x < 0 || x > 9 || y < 0 || y > 9) {
                 return false;   // se sale del tablero
             }
+            if (this.grid[x][y] !== null) {
+                return false; //celda ocupada para evitar solapamiento
+
+            }
         }
 
         // 3. Colocar el barco (ya sabemos que cabe)

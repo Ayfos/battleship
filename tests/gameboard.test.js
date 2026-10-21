@@ -92,4 +92,15 @@ describe('Gameboard', () => {
         const result = board.placeShip(ship, [8, 0], 'vertical');
         expect(result).toBe(false);
     });
+
+    test('devuelve false si el barco se solapa con otro', () => {
+        const board = new Gameboard();
+        const ship1 = new Ship(3);
+        const ship2 = new Ship(3);
+        board.placeShip(ship1, [0, 0], 'horizontal');  // ocupa [0][0], [0][1], [0][2]
+        const result = board.placeShip(ship2, [0, 1], 'horizontal');  // intenta [0][1], [0][2], [0][3]
+        expect(result).toBe(false);
+    });
+
+
 });
