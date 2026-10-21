@@ -29,4 +29,24 @@ describe('Game', () => {
         game.currentPlayer = game.player2;
         expect(game.isOver()).toBe(true);
     });
+
+    test('isOver es false si el currentPlayer tiene barcos a flote', () => {
+        const game = new Game();
+        const ship = new Ship(2);
+        game.player2.gameboard.placeShip(ship, [0, 0], 'horizontal');
+        game.player2.gameboard.receiveAttack([0, 0]); // solo 1 hit de 2
+        game.currentPlayer = game.player2;
+        expect(game.isOver()).toBe(false);
+    });
+
+    test('computerAttack ataca una coordenada válida', () => {
+        const fakeRandom = () => 0; // siempre devuelve 0
+        const game = new Game(fakeRandom);
+        game.currentPlayer = game.player2;
+
+        game.computerAttack();
+
+        // Con fakeRandom() = 0, la coordenada calculada será [0, 0]
+        expect(game.player1.gameboard.attackedCells.has('0,0')).toBe(true);
+    });
 });

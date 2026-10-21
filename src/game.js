@@ -1,7 +1,8 @@
 import Player from './player.js';
 
 class Game {
-    constructor() {
+    constructor(randomFn = Math.random) {
+        this.randomFn = randomFn;
         this.player1 = new Player('real');
         this.player2 = new Player('computer');
         this.currentPlayer = this.player1;
@@ -19,6 +20,18 @@ class Game {
 
     isOver() {
         return this.currentPlayer.gameboard.allSunk();
+    }
+
+    computerAttack() {
+        let x, y, key;
+
+        do {
+            x = Math.floor(this.randomFn() * 10);
+            y = Math.floor(this.randomFn() * 10);
+            key = `${x},${y}`;
+        } while (this.getOpponent().gameboard.attackedCells.has(key));
+
+        this.attack([x, y]);
     }
 }
 
