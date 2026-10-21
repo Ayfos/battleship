@@ -78,4 +78,11 @@ describe('Gameboard', () => {
         board.receiveAttack([0, 0]);  // segundo ataque, debe ignorarse
         expect(ship.hits).toBe(1);
     });
+
+    test('devuelve false si el barco se sale por la derecha', () => {
+        const board = new Gameboard();
+        const ship = new Ship(3);
+        const result = board.placeShip(ship, [0, 8], 'horizontal');
+        expect(result).toBe(false);
+    });
 });

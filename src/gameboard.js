@@ -12,12 +12,13 @@ class Gameboard {
             }
             this.grid.push(row);
         }
-    } 
+    }
 
     placeShip(ship, startCoords, orientation) {
         const [startX, startY] = startCoords;
-        this.ships.push(ship);
 
+        // 1. Calcular todas las coordenadas que ocupará el barco ANTES de colocarlo
+        const coords = [];
         for (let i = 0; i < ship.length; i++) {
             let x, y;
             if (orientation === 'horizontal') {
@@ -27,9 +28,24 @@ class Gameboard {
                 x = startX + i;
                 y = startY;
             }
+            coords.push([x, y]);
+        }
+
+        // 2. Validar: todas las coordenadas deben estar dentro del tablero
+        for (const [x, y] of coords) {
+            if (x < 0 || x > 9 || y < 0 || y > 9) {
+                return false;   // se sale del tablero
+            }
+        }
+
+        // 3. Colocar el barco (ya sabemos que cabe)
+        this.ships.push(ship);
+        for (const [x, y] of coords) {
             this.grid[x][y] = ship;
         }
-    } 
+
+        return true;   // colocado con éxito
+    }
 
     receiveAttack([x, y]) {
         const key = `${x},${y}`; // <-- sin espacio
@@ -44,12 +60,12 @@ class Gameboard {
         } else {
             target.hit();
         }
-    } 
+    }
 
     allSunk() {
         return this.ships.length > 0 && this.ships.every(ship => ship.isSunk());
-    } 
+    }
 
-} 
+}
 
 export default Gameboard;
