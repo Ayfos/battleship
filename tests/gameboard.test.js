@@ -85,4 +85,11 @@ describe('Gameboard', () => {
         const result = board.placeShip(ship, [0, 8], 'horizontal');
         expect(result).toBe(false);
     });
+
+    test('devuelve false si el barco se sale por abajo', () => {
+        const board = new Gameboard();
+        const ship = new Ship(3);
+        const result = board.placeShip(ship, [8, 0], 'vertical');
+        expect(result).toBe(false);
+    });
 });
