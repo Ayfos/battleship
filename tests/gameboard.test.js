@@ -62,4 +62,20 @@ describe('Gameboard', () => {
         // ship2 sigue a flote → allSunk() debe ser false
         expect(board.allSunk()).toBe(false);
     });
+
+    test('ignora ataques repetidos en agua', () => {
+        const board = new Gameboard();
+        board.receiveAttack([0, 0]);
+        board.receiveAttack([0, 0]);  // segundo ataque, debe ignorarse
+        expect(board.missedAttacks.length).toBe(1);
+    });
+
+    test('ignora ataques repetidos a un barco', () => {
+        const board = new Gameboard();
+        const ship = new Ship(3);
+        board.placeShip(ship, [0, 0], 'horizontal');
+        board.receiveAttack([0, 0]);
+        board.receiveAttack([0, 0]);  // segundo ataque, debe ignorarse
+        expect(ship.hits).toBe(1);
+    });
 });

@@ -1,16 +1,18 @@
 class Gameboard {
     constructor() {
-        this.grid = [];  //aquí van las filas
+        this.grid = [];
         this.missedAttacks = [];
         this.ships = [];
-        for (let i = 0; i < 10; i++) {            // 10 filas 
-            const row = [];                  // creamos una fila vacía
-            for (let j = 0; j < 10; j++) {         // 10 columnas en cada fila
+        this.attackedCells = new Set();
+
+        for (let i = 0; i < 10; i++) {
+            const row = [];
+            for (let j = 0; j < 10; j++) {
                 row.push(null);
             }
-            this.grid.push(row);     // añadimos la fila al grid
+            this.grid.push(row);
         }
-    }
+    } 
 
     placeShip(ship, startCoords, orientation) {
         const [startX, startY] = startCoords;
@@ -24,27 +26,30 @@ class Gameboard {
             } else {
                 x = startX + i;
                 y = startY;
-
             }
             this.grid[x][y] = ship;
         }
-
-
-    }
+    } 
 
     receiveAttack([x, y]) {
-        const target = this.grid[x][y];
+        const key = `${x},${y}`; // <-- sin espacio
 
+        if (this.attackedCells.has(key)) return;
+
+        this.attackedCells.add(key);
+
+        const target = this.grid[x][y];
         if (target === null) {
             this.missedAttacks.push([x, y]);
         } else {
             target.hit();
         }
-    }
+    } 
 
     allSunk() {
         return this.ships.length > 0 && this.ships.every(ship => ship.isSunk());
-    }
-}
+    } 
+
+} 
 
 export default Gameboard;
