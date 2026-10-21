@@ -102,5 +102,21 @@ describe('Gameboard', () => {
         expect(result).toBe(false);
     });
 
+    test('devuelve true si el barco se coloca correctamente', () => {
+        const board = new Gameboard();
+        const ship = new Ship(3);
+        const result = board.placeShip(ship, [0, 0], 'horizontal');
+        expect(result).toBe(true);
+    });
+
+    test('un placeShip inválido no modifica el grid ni ships', () => {
+        const board = new Gameboard();
+        const ship = new Ship(3);
+        board.placeShip(ship, [0, 8], 'horizontal'); // se sale → debe rechazarse
+        expect(board.ships.length).toBe(0);
+        expect(board.grid[0][8]).toBe(null);
+        expect(board.grid[0][9]).toBe(null);
+    });
+
 
 });
