@@ -49,4 +49,27 @@ describe('Game', () => {
         // Con fakeRandom() = 0, la coordenada calculada será [0, 0]
         expect(game.player1.gameboard.attackedCells.has('0,0')).toBe(true);
     });
+
+    test('computerAttack reintenta si la primera coordenada ya fue atacada', () => {
+        // fakeRandom: 0.5, 0.5 → coord [5, 5]
+        // luego 0.5, 0.5 → coord [5, 5] (ya atacada)
+        // luego 0.1, 0.2 → coord [1, 2] (libre)
+        const values = [0.5, 0.5, 0.5, 0.5, 0.1, 0.2];
+        let i = 0;
+        const fakeRandom = () => values[i++];
+
+        const game = new Game(fakeRandom);
+        game.currentPlayer = game.player2;
+
+        // Primer ataque: 5,5
+        game.computerAttack();
+        game.currentPlayer = game.player2;
+
+        // Segundo ataque: debería reintentar (5,5) y atacar 1,2
+        game.computerAttack();
+
+        expect(game.player1.gameboard.attackedCells.has('5,5')).toBe(true);
+        expect(game.player1.gameboard.attackedCells.has('1,2')).toBe(true);
+        expect(game.player1.gameboard.attackedCells.size).toBe(2);
+    });
 });

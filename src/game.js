@@ -24,11 +24,18 @@ class Game {
 
     computerAttack() {
         let x, y, key;
+        let attempts = 0;
 
         do {
             x = Math.floor(this.randomFn() * 10);
             y = Math.floor(this.randomFn() * 10);
             key = `${x},${y}`;
+            attempts++;
+
+            if (attempts > 1000) {
+                // Safety: si no encuentra coordenada legal, no ataca.
+                return;
+            }
         } while (this.getOpponent().gameboard.attackedCells.has(key));
 
         this.attack([x, y]);
