@@ -1,59 +1,161 @@
 import Game from './game.js';
+import Ship from './ship.js';
 import { placeRandomFleet } from './placement.js';
-import { renderBoard, addAttackListener, renderFleet } from './dom.js';
+import { renderBoard, addAttackListener, renderFleet, addHoverListener, addPlacementListener } from './dom.js';
 
-let isPlayerTurn = true;
+// --- ESTADO DEL JUEGO ---
+let isPlayerTurn = false; 
+let gameStarted = false;  
+let isPlacing = true;     
 
-// 1. Creamos la partida y colocamos los barcos
+// --- ESTADO DE COLOCACIÓN MANUAL ---
+const shipsToPlace = [5, 4, 3, 3, 2];
+let currentShipIndex = 0;
+let currentOrientation = 'horizontal';
+let currentPreview = []; 
+
+// 1. Elementos HTML
 const game = new Game();
-placeRandomFleet(game.player1.gameboard);
-placeRandomFleet(game.player2.gameboard);
-
-// 2. Buscamos los elementos del HTML
 const playerBoardEl = document.getElementById('player-board');
 const enemyBoardEl = document.getElementById('enemy-board');
 const statusEl = document.getElementById('status');
 const restartBtn = document.getElementById('restart-btn');
+const rotateBtn = document.getElementById('rotate-btn');
+const randomBtn = document.getElementById('random-btn');
+const placementControls = document.getElementById('placement-controls');
 const playerFleetEl = document.getElementById('player-fleet');
 const enemyFleetEl = document.getElementById('enemy-fleet');
 
-// 3. Pintamos los tableros y las flotas por primera vez
+// 2. Primer pintado (todo vacío)
 renderBoard(game.player1.gameboard, playerBoardEl);
 renderBoard(game.player2.gameboard, enemyBoardEl, true);
-renderFleet(game.player1.gameboard, playerFleetEl);
-renderFleet(game.player2.gameboard, enemyFleetEl);
+statusEl.textContent = `Coloca tu barco de longitud ${shipsToPlace[0]}.`;
 
-// 4. Mensaje inicial
-statusEl.textContent = '¡Tu turno! Haz clic en el radar enemigo.';
+// --- CONTROLES DE COLOCACIÓN ---
 
-// 5. Lógica del botón de reinicio
-restartBtn.addEventListener('click', () => {
-    window.location.reload();
+// Botón Rotar
+rotateBtn.addEventListener('click', () => {
+    currentOrientation = currentOrientation === 'horizontal' ? 'vertical' : 'horizontal';
+    rotateBtn.textContent = `Rotar (${currentOrientation === 'horizontal' ? 'Horizontal' : 'Vertical'})`;
+    clearPreview();
 });
 
-// 6. Lógica de ataque del jugador
+// Botón Aleatorio
+randomBtn.addEventListener('click', () => {
+    // Colocamos aleatoriamente en el jugador
+    placeRandomFleet(game.player1.gameboard);
+    // Pintamos y flota
+    renderBoard(game.player1.gameboard, playerBoardEl);
+    renderFleet(game.player1.gameboard, playerFleetEl);
+    // Pasamos a la batalla
+    startBattle();
+});
+
+// Función para limpiar la previsualización
+function clearPreview() {
+    currentPreview.forEach(([x, y]) => {
+        const cell = playerBoardEl.querySelector(`td[data-x="${x}"][data-y="${y}"]`);
+        if (cell) cell.classList.remove('cell--preview', 'cell--invalid');
+    });
+    currentPreview = [];
+}
+
+// Hover (previsualización)
+addHoverListener(playerBoardEl, (coords) => {
+    if (!isPlacing || currentShipIndex >= shipsToPlace.length) return;
+    
+    clearPreview();
+    const [startX, startY] = coords;
+    const length = shipsToPlace[currentShipIndex];
+    const cells = [];
+
+    for (let i = 0; i < length; i++) {
+        const x = currentOrientation === 'horizontal' ? startX : startX + i;
+        const y = currentOrientation === 'horizontal' ? startY + i : startY;
+        if (x > 9 || y > 9) break; 
+        cells.push([x, y]);
+    }
+
+    const isValid = cells.length === length;
+
+    cells.forEach(([x, y]) => {
+        const cell = playerBoardEl.querySelector(`td[data-x="${x}"][data-y="${y}"]`);
+        if (cell) {
+            cell.classList.add(isValid ? 'cell--preview' : 'cell--invalid');
+            currentPreview.push([x, y]);
+        }
+    });
+}, clearPreview);
+
+// Clic para colocar barco
+addPlacementListener(playerBoardEl, (coords) => {
+    if (!isPlacing || currentShipIndex >= shipsToPlace.length) return;
+
+    const length = shipsToPlace[currentShipIndex];
+    const ship = new Ship(length);
+    
+    // Intentamos colocar
+    const success = game.player1.gameboard.placeShip(ship, coords, currentOrientation);
+
+    if (success) {
+        renderBoard(game.player1.gameboard, playerBoardEl);
+        renderFleet(game.player1.gameboard, playerFleetEl);
+        currentShipIndex++;
+        clearPreview();
+
+        if (currentShipIndex >= shipsToPlace.length) {
+            startBattle();
+        } else {
+            statusEl.textContent = `Coloca tu barco de longitud ${shipsToPlace[currentShipIndex]}.`;
+        }
+    } else {
+        statusEl.textContent = '¡No cabe ahí! Prueba en otra posición.';
+    }
+});
+
+// --- LÓGICA DE BATALLA ---
+
+function startBattle() {
+    isPlacing = false;
+    gameStarted = true;
+    isPlayerTurn = true;
+    
+    // Colocamos los barcos del enemigo (aleatorio)
+    placeRandomFleet(game.player2.gameboard);
+    
+    // Ocultamos controles de colocación
+    placementControls.classList.add('hidden');
+    
+    // Repintamos todo
+    renderBoard(game.player1.gameboard, playerBoardEl);
+    renderBoard(game.player2.gameboard, enemyBoardEl, true);
+    renderFleet(game.player2.gameboard, enemyFleetEl);
+
+    statusEl.textContent = '¡Tu turno! Haz clic en el radar enemigo.';
+}
+
+// Botón de reinicio
+restartBtn.addEventListener('click', () => window.location.reload());
+
+// Ataque del jugador
 function onPlayerAttack(coords) {
-    if (!isPlayerTurn) return; 
+    if (!gameStarted || !isPlayerTurn) return;
     isPlayerTurn = false;
 
     const result = game.attack(coords);
 
-    // Si disparó a una casilla ya atacada, le devolvemos el turno
     if (result === 'invalid') {
         isPlayerTurn = true; 
         return;
     }
 
-    // Repintamos el radar enemigo y su flota
     renderBoard(game.player2.gameboard, enemyBoardEl, true);
     renderFleet(game.player2.gameboard, enemyFleetEl);
 
-    // Mostramos el resultado
     if (result === 'miss') statusEl.textContent = '¡Agua! 💧';
     if (result === 'hit') statusEl.textContent = '¡Tocado! 💥';
     if (result === 'sunk') statusEl.textContent = '¡Hundido! 💀';
 
-    // ¿Victoria?
     if (game.isOver()) {
         statusEl.textContent = '¡Has ganado! 🎉';
         restartBtn.classList.remove('hidden');
@@ -63,25 +165,19 @@ function onPlayerAttack(coords) {
     // Turno de la IA
     setTimeout(() => {
         statusEl.textContent = 'Turno del enemigo...';
-        
         game.computerAttack();
-        
-        // Repintamos tu tablero y tu flota
         renderBoard(game.player1.gameboard, playerBoardEl);
         renderFleet(game.player1.gameboard, playerFleetEl);
 
-        // ¿Derrota?
         if (game.isOver()) {
             statusEl.textContent = '¡Has perdido! 💥';
             restartBtn.classList.remove('hidden');
             return;
         }
 
-        // Volvemos a tu turno
         isPlayerTurn = true;
         statusEl.textContent = 'Tu turno';
     }, 1000); 
 }
 
-// 7. Conectamos los clics del radar enemigo
 addAttackListener(enemyBoardEl, onPlayerAttack);

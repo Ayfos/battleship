@@ -14,7 +14,6 @@
             <h1>⚓ BATTLESHIP</h1>
         </header>
 
-        <!-- Los tableros en paralelo -->
         <main id="boards">
             <!-- Tablero del jugador -->
             <section class="board-section">
@@ -31,10 +30,15 @@
             </section>
         </main>
 
-        <!-- Panel de control (mensajes y botones) -->
         <section class="control-panel">
             <p id="status" class="status-message">Esperando instrucciones...</p>
-            <button id="start-btn" class="action-btn hidden">Colocar mi flota (Aleatorio)</button>
+            
+            <!-- Controles de colocación -->
+            <div id="placement-controls" class="controls-group">
+                <button id="rotate-btn" class="action-btn">Rotar (Horizontal)</button>
+                <button id="random-btn" class="action-btn">Aleatorio</button>
+            </div>
+            
             <button id="restart-btn" class="hidden">Jugar de nuevo</button>
         </section>
 

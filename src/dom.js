@@ -1,5 +1,5 @@
 export function renderBoard(gameboard, container, hideShips = false) {
-    container.innerHTML = '';   // limpia el contenido previo bueno para renderizar
+    container.innerHTML = ''; 
 
     const table = document.createElement('table');
     table.classList.add('board-table');
@@ -29,39 +29,53 @@ export function renderBoard(gameboard, container, hideShips = false) {
         }
         table.appendChild(row);
     }
-
-
     container.appendChild(table);
+}
+
+export function renderFleet(gameboard, container) {
+    container.innerHTML = ''; 
+
+    gameboard.ships.forEach(ship => {
+        const shipEl = document.createElement('div');
+        shipEl.classList.add('fleet-ship');
+        shipEl.style.width = `${ship.length * 20}px`;
+        
+        if (ship.isSunk()) {
+            shipEl.classList.add('sunk');
+        }
+        container.appendChild(shipEl);
+    });
 }
 
 export function addAttackListener(container, onAttack) {
     container.addEventListener('click', (event) => {
         if (event.target.tagName !== 'TD') return;
-
         const cell = event.target;
         const x = Number(cell.dataset.x);
         const y = Number(cell.dataset.y);
-
         onAttack([x, y]);
     });
 }
 
-export function renderFleet(gameboard, container) {
-    container.innerHTML = ''; // Limpiamos el panel
+export function addHoverListener(container, onHover, onLeave) {
+    container.addEventListener('mouseover', (event) => {
+        if (event.target.tagName !== 'TD') return;
+        const x = Number(event.target.dataset.x);
+        const y = Number(event.target.dataset.y);
+        onHover([x, y]);
+    });
 
-    // Recorremos los barcos del tablero
-    gameboard.ships.forEach(ship => {
-        const shipEl = document.createElement('div');
-        shipEl.classList.add('fleet-ship');
-        
-        // El ancho del barquito depende de su longitud (ej: 15px por cada celda)
-        shipEl.style.width = `${ship.length * 20}px`;
-        
-        // Si el barco está hundido, le añadimos la clase CSS
-        if (ship.isSunk()) {
-            shipEl.classList.add('sunk');
-        }
+    container.addEventListener('mouseout', (event) => {
+        if (event.target.tagName !== 'TD') return;
+        onLeave();
+    });
+}
 
-        container.appendChild(shipEl);
+export function addPlacementListener(container, onPlace) {
+    container.addEventListener('click', (event) => {
+        if (event.target.tagName !== 'TD') return;
+        const x = Number(event.target.dataset.x);
+        const y = Number(event.target.dataset.y);
+        onPlace([x, y]);
     });
 }
