@@ -1,4 +1,4 @@
-export function renderBoard(gameboard, container) {
+export function renderBoard(gameboard, container, hideShips = false) {
     container.innerHTML = '';   // limpia el contenido previo bueno para renderizar
 
     const table = document.createElement('table');
@@ -17,7 +17,7 @@ export function renderBoard(gameboard, container) {
 
             if (ship && attacked) {
                 cell.classList.add('cell--hit');
-            } else if (ship) {
+            } else if (ship && !hideShips) {
                 cell.classList.add('cell--ship');
             } else if (attacked) {
                 cell.classList.add('cell--miss');
@@ -30,5 +30,18 @@ export function renderBoard(gameboard, container) {
         table.appendChild(row);
     }
 
+
     container.appendChild(table);
+}
+
+export function addAttackListener(container, onAttack) {
+    container.addEventListener('click', (event) => {
+        if (event.target.tagName !== 'TD') return;
+
+        const cell = event.target;
+        const x = Number(cell.dataset.x);
+        const y = Number(cell.dataset.y);
+
+        onAttack([x, y]);
+    });
 }
