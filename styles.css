@@ -1,25 +1,18 @@
-/* 1. Variables globales (Fácil de cambiar) */
+/* 1. Variables globales */
 :root {
     --bg-dark: #0f172a;
-    /* Fondo de la página */
     --bg-panel: #1e293b;
-    /* Fondo de los paneles */
     --water: #0f2a45;
-    /* Agua no atacada */
     --water-hover: #1a4066;
-    /* Agua al pasar el ratón */
     --ship: #64748b;
-    /* Tus barcos (gris acero) */
     --hit: #ef4444;
-    /* Tocado (rojo) */
     --miss: #38bdf8;
-    /* Agua atacada (azul neón) */
     --text-main: #e2e8f0;
     --text-highlight: #38bdf8;
     --border-grid: #334155;
 }
 
-/* 2. Estilos básicos del cuerpo */
+/* 2. Estilos básicos */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--bg-dark);
@@ -40,7 +33,7 @@ body {
     text-align: center;
 }
 
-/* 3. Cabecera y mensajes */
+/* 3. Cabecera y textos */
 h1 {
     margin-top: 0;
     margin-bottom: 20px;
@@ -57,10 +50,10 @@ h2 {
     letter-spacing: 2px;
 }
 
-/* 4. Distribución de los tableros (EN PARALELO) */
+/* 4. Distribución de tableros (Paralelos) */
 #boards {
     display: flex;
-    gap: 50px; /* Separación entre los dos tableros */
+    gap: 50px;
     justify-content: center;
     align-items: flex-start;
     margin-bottom: 20px;
@@ -72,7 +65,7 @@ h2 {
     align-items: center;
 }
 
-/* 5. La tabla y las celdas */
+/* 5. La tabla y celdas */
 .board-table {
     border-collapse: collapse;
     background-color: var(--water);
@@ -85,6 +78,9 @@ h2 {
     height: 35px;
     border: 1px solid var(--border-grid);
     transition: background-color 0.2s, transform 0.1s;
+    /* ELIMINADO display:flex. Las celdas de tabla se gestionan solas */
+    text-align: center;
+    vertical-align: middle;
 }
 
 /* 6. Estados de las celdas */
@@ -132,7 +128,7 @@ h2 {
     100% { transform: scale(1); }
 }
 
-/* 7. Panel de control (mensajes y botones debajo de los tableros) */
+/* 7. Panel de control */
 .control-panel {
     display: flex;
     flex-direction: column;
@@ -150,7 +146,6 @@ h2 {
     padding: 10px 25px;
     border-radius: 8px;
     border: 1px solid var(--border-grid);
-    transition: color 0.3s;
     text-align: center;
     min-width: 250px;
     margin: 0;
@@ -167,7 +162,7 @@ h2 {
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.1s;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .action-btn:hover {
@@ -185,7 +180,7 @@ h2 {
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s, transform 0.1s;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 #restart-btn:hover {
@@ -197,7 +192,7 @@ h2 {
     display: none !important;
 }
 
-/* 9. Panel de flota (los barquitos de abajo) */
+/* 9. Flota */
 .fleet-panel {
     display: flex;
     gap: 10px;
@@ -220,11 +215,123 @@ h2 {
     opacity: 0.3;
 }
 
-/* 10. Pie de página */
+/* 10. Previsualización y controles */
+.cell--preview {
+    background-color: #94a3b8 !important;
+    cursor: pointer;
+}
+
+.cell--invalid {
+    background-color: var(--hit) !important;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.controls-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+/* 11. Pie de página */
 footer {
     font-size: 0.8rem;
     color: #64748b;
     margin-top: 20px;
     border-top: 1px solid var(--border-grid);
     padding-top: 15px;
+}
+
+/* =========================================
+12. DISEÑO RESPONSIVE (Móvil)
+   ========================================= */
+@media (max-width: 850px) {
+    body {  
+        padding: 5px;
+    }
+
+    .game-container {
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        font-size: 1.3rem;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+    }
+
+    h2 {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+        letter-spacing: 1px;
+    }
+
+    #boards {
+        flex-direction: row;
+        gap: 10px;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .board-table td {
+        width: 18px;
+        height: 18px;
+        font-size: 0.8rem;
+    }
+
+    .fleet-panel {
+        gap: 3px;
+        margin-top: 5px;
+        flex-wrap: wrap;
+    }
+
+    .fleet-ship {
+        height: 8px;
+    }
+
+    .control-panel {
+        margin-top: 10px;
+    }
+
+    .status-message {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+        min-width: 180px;
+    }
+
+    .action-btn,
+    #restart-btn {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+    }
+
+    .controls-group {
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .controls-group button {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .board-table td:active {
+        transform: scale(1.3);
+        background-color: #fff !important;
+        z-index: 10;
+        position: relative;
+        box-shadow: 0 0 10px #fff;
+    }
+}
+
+@media (max-width: 380px) {
+    .board-table td {
+        width: 15px;
+        height: 15px;
+    }
 }

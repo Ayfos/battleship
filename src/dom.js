@@ -17,6 +17,9 @@ export function renderBoard(gameboard, container, hideShips = false) {
 
             if (ship && attacked) {
                 cell.classList.add('cell--hit');
+                if (ship.isSunk()) {
+                    cell.textContent = '💀';
+                }
             } else if (ship && !hideShips) {
                 cell.classList.add('cell--ship');
             } else if (attacked) {
