@@ -1,0 +1,55 @@
+body {
+    font-family: sans-serif;
+    background: #f5f5f5;
+    color: #222;
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 0;
+}
+
+#status {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #0055aa;
+    margin-bottom: 20px;
+}
+
+#boards {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.board-table {
+    border-collapse: collapse;
+    background: #ddeeff;
+}
+
+.board-table td {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #888;
+}
+
+.cell--water {
+    background: #a8d0e6;
+}
+
+/* azul claro */
+.cell--ship {
+    background: #4a90d9;
+}
+
+/* azul medio */
+.cell--hit {
+    background: #e74c3c;
+}
+
+/* rojo */
+.cell--miss {
+    background: #ffffff;
+}
+
+/* blanco */
