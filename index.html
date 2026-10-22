@@ -4,25 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battleship</title><link rel="stylesheet" href="./styles.css">
-
+    <title>Battleship — Radar Naval</title>
+    <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>
-    <h1>Battleship</h1>
+    <div class="game-container">
+        <header>
+            <h1>⚓ BATTLESHIP</h1>
+            <p id="status" class="status-message">Esperando instrucciones...</p>
+        </header>
 
-    <p id="status">Coloca tus barcos para empezar</p>
+        <main id="boards">
+            <!-- Tablero del jugador -->
+            <section class="board-section">
+                <h2>Tu Flota</h2>
+                <div id="player-board" class="board-wrapper"></div>
+            </section>
 
-    <div id="boards">
-        <div>
-            <h2>Tu tablero</h2>
-            <div id="player-board"></div>
-        </div>
+            <!-- Tablero enemigo -->
+            <section class="board-section">
+                <h2>Radar Enemigo</h2>
+                <div id="enemy-board" class="board-wrapper"></div>
+            </section>
+        </main>
 
-        <div>
-            <h2>Tablero enemigo</h2>
-            <div id="enemy-board"></div>
-        </div>
+        <footer>
+            <p>Sistema de Defensa Naval v1.0</p>
+        </footer>
     </div>
 
     <script type="module" src="./src/index.js"></script>
