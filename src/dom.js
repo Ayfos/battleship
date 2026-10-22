@@ -45,3 +45,23 @@ export function addAttackListener(container, onAttack) {
         onAttack([x, y]);
     });
 }
+
+export function renderFleet(gameboard, container) {
+    container.innerHTML = ''; // Limpiamos el panel
+
+    // Recorremos los barcos del tablero
+    gameboard.ships.forEach(ship => {
+        const shipEl = document.createElement('div');
+        shipEl.classList.add('fleet-ship');
+        
+        // El ancho del barquito depende de su longitud (ej: 15px por cada celda)
+        shipEl.style.width = `${ship.length * 20}px`;
+        
+        // Si el barco está hundido, le añadimos la clase CSS
+        if (ship.isSunk()) {
+            shipEl.classList.add('sunk');
+        }
+
+        container.appendChild(shipEl);
+    });
+}

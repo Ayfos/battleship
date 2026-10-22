@@ -12,22 +12,31 @@
     <div class="game-container">
         <header>
             <h1>⚓ BATTLESHIP</h1>
-            <p id="status" class="status-message">Esperando instrucciones...</p>
         </header>
 
+        <!-- Los tableros en paralelo -->
         <main id="boards">
             <!-- Tablero del jugador -->
             <section class="board-section">
                 <h2>Tu Flota</h2>
                 <div id="player-board" class="board-wrapper"></div>
+                <div id="player-fleet" class="fleet-panel"></div>
             </section>
 
             <!-- Tablero enemigo -->
             <section class="board-section">
                 <h2>Radar Enemigo</h2>
                 <div id="enemy-board" class="board-wrapper"></div>
+                <div id="enemy-fleet" class="fleet-panel"></div>
             </section>
         </main>
+
+        <!-- Panel de control (mensajes y botones) -->
+        <section class="control-panel">
+            <p id="status" class="status-message">Esperando instrucciones...</p>
+            <button id="start-btn" class="action-btn hidden">Colocar mi flota (Aleatorio)</button>
+            <button id="restart-btn" class="hidden">Jugar de nuevo</button>
+        </section>
 
         <footer>
             <p>Sistema de Defensa Naval v1.0</p>
