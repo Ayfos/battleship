@@ -60,25 +60,12 @@ export function addAttackListener(container, onAttack) {
     });
 }
 
-export function addHoverListener(container, onHover, onLeave) {
-    container.addEventListener('mouseover', (event) => {
-        if (event.target.tagName !== 'TD') return;
-        const x = Number(event.target.dataset.x);
-        const y = Number(event.target.dataset.y);
-        onHover([x, y]);
-    });
-
-    container.addEventListener('mouseout', (event) => {
-        if (event.target.tagName !== 'TD') return;
-        onLeave();
-    });
-}
-
 export function addPlacementListener(container, onPlace) {
     container.addEventListener('click', (event) => {
         if (event.target.tagName !== 'TD') return;
-        const x = Number(event.target.dataset.x);
-        const y = Number(event.target.dataset.y);
+        const cell = event.target;
+        const x = Number(cell.dataset.x);
+        const y = Number(cell.dataset.y);
         onPlace([x, y]);
     });
 }

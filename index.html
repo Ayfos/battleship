@@ -30,15 +30,18 @@
             </section>
         </main>
 
+        <!-- Panel de control (mensajes y botones) -->
         <section class="control-panel">
             <p id="status" class="status-message">Esperando instrucciones...</p>
             
             <!-- Controles de colocación -->
-            <div id="placement-controls" class="controls-group">
+            <div id="placement-controls" class="hidden">
                 <button id="rotate-btn" class="action-btn">Rotar (Horizontal)</button>
-                <button id="random-btn" class="action-btn">Aleatorio</button>
+                <button id="random-place-btn" class="action-btn">Aleatorio</button>
+                <button id="reset-placement-btn" class="action-btn" style="background-color: #64748b; color: white;">Volver a colocar</button>
             </div>
-            
+
+            <button id="start-btn" class="action-btn hidden">Empezar partida</button>
             <button id="restart-btn" class="hidden">Jugar de nuevo</button>
         </section>
 
