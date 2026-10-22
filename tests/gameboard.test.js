@@ -118,5 +118,23 @@ describe('Gameboard', () => {
         expect(board.grid[0][9]).toBe(null);
     });
 
+    test('receiveAttack devuelve "miss", "hit" o "sunk"', () => {
+        const board = new Gameboard();
+        const ship = new Ship(2); // Barco de 2
+        board.placeShip(ship, [0, 0], 'horizontal');
+
+        // 1. Disparamos al agua
+        expect(board.receiveAttack([9, 9])).toBe('miss');
+
+        // 2. Disparamos al barco (primer impacto, no se hunde)
+        expect(board.receiveAttack([0, 0])).toBe('hit');
+
+        // 3. Disparamos al barco (segundo impacto, se hunde)
+        expect(board.receiveAttack([0, 1])).toBe('sunk');
+
+        // 4. Disparamos a donde ya habíamos disparado
+        expect(board.receiveAttack([0, 0])).toBe('invalid');
+    });
+
 
 });

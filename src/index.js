@@ -1,54 +1,69 @@
+console.log("1. El script empieza");
+
 import Game from './game.js';
 import { placeRandomFleet } from './placement.js';
 import { renderBoard, addAttackListener } from './dom.js';
 
-// 1. Creamos la partida
-const game = new Game();
+console.log("2. Los imports funcionan");
 
-// 2. Colocamos los barcos aleatoriamente en ambos tableros
+let isPlayerTurn = true;
+
+const game = new Game();
+console.log("3. La partida se ha creado");
+
 placeRandomFleet(game.player1.gameboard);
 placeRandomFleet(game.player2.gameboard);
+console.log("4. Los barcos se han colocado");
 
-// 3. Buscamos los elementos del HTML
 const playerBoardEl = document.getElementById('player-board');
 const enemyBoardEl = document.getElementById('enemy-board');
 const statusEl = document.getElementById('status');
+console.log("5. Los elementos HTML se han encontrado");
 
-// 4. Pintamos los tableros por primera vez
 renderBoard(game.player1.gameboard, playerBoardEl);
 renderBoard(game.player2.gameboard, enemyBoardEl, true);
+console.log("6. Los tableros se han pintado");
 
-// 5. Función que se ejecuta cuando el jugador hace clic en el tablero enemigo
+statusEl.textContent = '¡Tu turno! Haz clic en el radar enemigo.';
+console.log("7. El texto se ha cambiado");
+
 function onPlayerAttack(coords) {
-    // El jugador ataca
-    game.attack(coords);
-    renderBoard(game.player2.gameboard, enemyBoardEl, true); // Repintamos el tablero enemigo
+    if (!isPlayerTurn) return; 
+    isPlayerTurn = false;
 
-    // ¿Hemos ganado?
-    if (game.isOver()) {
-        statusEl.textContent = '¡Has ganado! 🎉';
-        return; // Cortamos la ejecución aquí
+    const result = game.attack(coords);
+
+    if (result === 'invalid') {
+        isPlayerTurn = true; 
+        return;
     }
 
-    // Si no hemos ganado, le toca a la IA
-    statusEl.textContent = 'Turno del enemigo...';
+    renderBoard(game.player2.gameboard, enemyBoardEl, true);
+
+    if (result === 'miss') statusEl.textContent = '¡Agua! 💧';
+    if (result === 'hit') statusEl.textContent = '¡Tocado! 💥';
+    if (result === 'sunk') statusEl.textContent = '¡Hundido! 💀';
+
+    if (game.isOver()) {
+        statusEl.textContent = '¡Has ganado! 🎉';
+        return;
+    }
 
     setTimeout(() => {
-        game.computerAttack(); // La IA ataca
-        renderBoard(game.player1.gameboard, playerBoardEl); // Repintamos tu tablero
+        statusEl.textContent = 'Turno del enemigo...';
+        
+        game.computerAttack();
+        renderBoard(game.player1.gameboard, playerBoardEl);
 
-        // ¿Hemos perdido?
         if (game.isOver()) {
             statusEl.textContent = '¡Has perdido! 💥';
             return;
         }
 
-        statusEl.textContent = 'Tu turno'; // Volvemos a tu turno
-    }, 800); // Espera 800 milisegundos (0.8 segundos) antes de que ataque la IA
+        isPlayerTurn = true;
+        statusEl.textContent = 'Tu turno';
+    }, 1000); 
 }
 
-// 6. Activamos los clics en el tablero enemigo
 addAttackListener(enemyBoardEl, onPlayerAttack);
-
-// 7. Mensaje inicial
-statusEl.textContent = 'Tu turno';
+console.log("8. Todo listo para jugar");

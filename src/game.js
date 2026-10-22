@@ -14,8 +14,9 @@ class Game {
 
     attack(coords) {
         const opponent = this.getOpponent();
-        opponent.gameboard.receiveAttack(coords);
+        const result = opponent.gameboard.receiveAttack(coords); // guardamos el resultado
         this.currentPlayer = opponent;
+        return result; // lo devolvemos
     }
 
     isOver() {

@@ -52,17 +52,25 @@ class Gameboard {
     }
 
     receiveAttack([x, y]) {
-        const key = `${x},${y}`; // <-- sin espacio
-
-        if (this.attackedCells.has(key)) return;
-
+        const key = `${x},${y}`;
+    
+        if (this.attackedCells.has(key)) {
+            return 'invalid'; // Ya atacado
+        }
+    
         this.attackedCells.add(key);
-
+    
         const target = this.grid[x][y];
+    
         if (target === null) {
             this.missedAttacks.push([x, y]);
+            return 'miss'; // Agua
         } else {
             target.hit();
+            if (target.isSunk()) {
+                return 'sunk'; // Barco hundido
+            }
+            return 'hit'; // Barco tocado
         }
     }
 
