@@ -4,6 +4,14 @@ Un clásico juego de **Hundir la Flota** (Battleship) desarrollado como proyecto
 
 El juego enfrenta a un jugador humano contra una inteligencia artificial en una interfaz con estética de radar naval moderno.
 
+🎮 **[¡Juega a Battleship en vivo aquí!]( https://ayfos.github.io/battleship/)**
+
+## 🎮 Características
+
+Un clásico juego de **Hundir la Flota** (Battleship) desarrollado como proyecto final del bloque de JavaScript de [The Odin Project](https://www.theodinproject.com/).
+
+El juego enfrenta a un jugador humano contra una inteligencia artificial en una interfaz con estética de radar naval moderno.
+
 ## 🎮 Características
 
 - **Preparación de flota:** coloca tus barcos manualmente haciendo clic en el tablero o usa el botón de colocación aleatoria. Puedes rotar los barcos entre horizontal y vertical.
